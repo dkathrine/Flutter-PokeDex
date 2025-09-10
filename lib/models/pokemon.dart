@@ -14,6 +14,7 @@ class Pokemon {
   final List<String> eggGroups;
   final String eggCycle;
   final List<EvolutionStage> evolutionChain;
+  final Color mainColor;
 
   const Pokemon({
     required this.id,
@@ -29,6 +30,7 @@ class Pokemon {
     required this.eggGroups,
     required this.eggCycle,
     required this.evolutionChain,
+    required this.mainColor,
   });
 }
 
