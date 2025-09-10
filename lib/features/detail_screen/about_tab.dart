@@ -54,7 +54,7 @@ class AboutTab extends StatelessWidget {
                       child: Container(
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.9),
+                          color: Colors.blue.withAlpha(90),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomLeft: Radius.circular(8),
@@ -67,7 +67,7 @@ class AboutTab extends StatelessWidget {
                       child: Container(
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.pink.withOpacity(0.85),
+                          color: Colors.pink.withAlpha(85),
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(8),
                             bottomRight: Radius.circular(8),
