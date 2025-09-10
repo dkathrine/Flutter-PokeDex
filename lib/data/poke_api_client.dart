@@ -11,7 +11,7 @@ class PokeApiClient {
   );
 
   Future<Map<String, dynamic>> fetchPokemonList({
-    int offset = 20,
+    int offset = 0,
     int limit = 20,
   }) async {
     final resp = await _dio.get(

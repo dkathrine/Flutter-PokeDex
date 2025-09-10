@@ -10,7 +10,7 @@ class PokemonDetail {
   final String weight;
   final List<String> abilities;
   final Map<String, int> baseStats;
-  final double genderRatioMale;
+  final double? genderRatioMale;
   final List<String> eggGroups;
   final List<EvolutionStage> evolutionChain;
 
@@ -56,17 +56,16 @@ class PokemonSummary {
   });
 }
 
-String _officialArtwork(Map<String, dynamic> raw) {
+String officialArtwork(Map<String, dynamic> raw) {
   try {
     final other = raw["sprites"]?["other"];
     final art = other?["official-artwork"]?["front_default"] as String?;
     if (art != null && art.isNotEmpty) return art;
-  } catch (_) {
-    return raw["sprites"]?["front_default"] as String? ?? "";
-  }
+  } catch (_) {}
+  return raw["sprites"]?["front_default"] as String? ?? "";
 }
 
-List<String> _mapTypes(dynamic raw) {
+List<String> mapTypes(dynamic raw) {
   if (raw == null) return [];
   return (raw as List)
       .map((e) => (e["type"]?["name"] as String?) ?? "")
@@ -74,7 +73,7 @@ List<String> _mapTypes(dynamic raw) {
       .toList();
 }
 
-Map<String, int> _mapStats(dynamic raw) {
+Map<String, int> mapStats(dynamic raw) {
   final Map<String, int> out = {};
   if (raw == null) return out;
   for (final s in raw as List) {
@@ -85,7 +84,7 @@ Map<String, int> _mapStats(dynamic raw) {
   return out;
 }
 
-List<String> _mapAbilities(dynamic raw) {
+List<String> mapAbilities(dynamic raw) {
   if (raw == null) return [];
   return (raw as List)
       .map((e) => (e["ability"]?["name"] as String?) ?? "")
@@ -93,7 +92,7 @@ List<String> _mapAbilities(dynamic raw) {
       .toList();
 }
 
-String _extractEngSpecies(dynamic speciesRaw) {
+String extractEngSpecies(dynamic speciesRaw) {
   final species = speciesRaw["genera"] as List<dynamic>?;
   if (species != null) {
     for (final s in species) {
@@ -105,7 +104,7 @@ String _extractEngSpecies(dynamic speciesRaw) {
   return (speciesRaw["name"] as String?) ?? "";
 }
 
-int? _extractIdFromUrl(String? url) {
+int? extractIdFromUrl(String? url) {
   if (url == null) return null;
   final parts = url.split("/");
   for (var i = parts.length - 1; i >= 0; i--) {
