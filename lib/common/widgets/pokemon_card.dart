@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
+import 'package:pokedex/common/utils/type_assets.dart';
 
 class PokemonCard extends StatelessWidget {
   final PokemonSummary pokemon;
@@ -12,6 +13,8 @@ class PokemonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final base = const Color.fromARGB(255, 163, 64, 255);
     final darker = const Color.fromARGB(255, 87, 14, 155);
+
+    final gradientColor = TypeAssets.gradientForType(this.pokemon.types.first);
 
     return GestureDetector(
       onTap: onTap,
@@ -26,7 +29,8 @@ class PokemonCard extends StatelessWidget {
             //margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [base.withAlpha(95), darker.withAlpha(95)],
+                colors:
+                    gradientColor, //[base.withAlpha(95), darker.withAlpha(95)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

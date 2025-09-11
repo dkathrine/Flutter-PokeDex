@@ -5,6 +5,7 @@ import 'package:pokedex/features/detail_screen/about_tab.dart';
 import 'package:pokedex/features/detail_screen/base_stats_tab.dart';
 import 'package:pokedex/features/detail_screen/evolution_tab.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
+import 'package:pokedex/common/utils/type_assets.dart';
 
 class DetailScreen extends StatefulWidget {
   final PokemonSummary pokemon;
@@ -51,15 +52,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
           final pokemon = asyncSnapshot.data!;
 
+          final gradientColor = TypeAssets.gradientForType(pokemon.types.first);
+
           return SizedBox.expand(
             child: Stack(
               children: [
                 // Top header
                 Container(
                   height: DetailScreen._topHeight + 100,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF2DD4BF), Color(0xFF34D399)],
+                      colors: gradientColor,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
