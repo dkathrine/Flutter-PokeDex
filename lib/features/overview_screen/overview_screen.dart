@@ -1,21 +1,24 @@
 // lib/screens/overview_screen.dart
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
+import 'package:pokedex/data/pokemon_repository.dart';
 import 'package:pokedex/common/widgets/pokemon_card.dart';
 import 'package:pokedex/common/widgets/type_filter_button.dart';
 import 'package:pokedex/features/detail_screen/detail_screen.dart';
 
 class OverviewScreen extends StatefulWidget {
-  final List<Pokemon> allPokemon;
-
-  const OverviewScreen({super.key, required this.allPokemon});
+  const OverviewScreen({super.key});
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  late List<Pokemon> filtered;
+  final PokemonRepository _repo = PokemonRepository();
+  List<PokemonSummary> _items = [];
+  late List<PokemonSummary> filtered = [];
+  bool _loading = false;
+  String? _error;
   final TextEditingController _txtctrl = TextEditingController();
   String? _selectedType;
   final FocusNode _searchFocusNode = FocusNode();
@@ -23,8 +26,33 @@ class _OverviewScreenState extends State<OverviewScreen> {
   @override
   void initState() {
     super.initState();
-    filtered = widget.allPokemon;
+    _loadPage();
     _txtctrl.addListener(_onSearchOrFilterChanged);
+  }
+
+  Future<void> _loadPage() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final page = await _repo.fetchPage();
+      setState(() {
+        _items = page;
+        filtered = _items;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load Pokemon: $_error")),
+      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -38,7 +66,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   void _onSearchOrFilterChanged() {
     final q = _txtctrl.text.trim().toLowerCase();
     setState(() {
-      filtered = widget.allPokemon.where((p) {
+      filtered = _items.where((p) {
         final matchesName = q.isEmpty || p.name.toLowerCase().contains(q);
         final matchesType =
             _selectedType == null ||

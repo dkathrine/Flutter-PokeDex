@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 
 class BaseStatsTab extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonDetail pokemon;
   const BaseStatsTab({super.key, required this.pokemon});
 
   static const int _statMax = 255;

@@ -9,20 +9,20 @@ class PokedexApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pokedex',
-      home: OverviewScreen(allPokemon: _dummyPokemon),
+      home: OverviewScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 // Dummy Pokémon
-final List<Pokemon> _dummyPokemon = [
-  Pokemon(
+final List<PokemonDetail> _dummyPokemon = [
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
     imageUrl:
-        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/245.png',
     species: 'Seed',
     height: '2\'3" (0.70 m)',
     weight: '15.2 lbs (6.9 kg)',
@@ -37,7 +37,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -55,12 +54,11 @@ final List<Pokemon> _dummyPokemon = [
         id: 3,
         name: 'Venusaur',
         imageUrl:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
+            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
-  Pokemon(
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
@@ -80,7 +78,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -101,9 +98,8 @@ final List<Pokemon> _dummyPokemon = [
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
-  Pokemon(
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
@@ -123,7 +119,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -144,9 +139,8 @@ final List<Pokemon> _dummyPokemon = [
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
-  Pokemon(
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
@@ -166,7 +160,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -187,9 +180,8 @@ final List<Pokemon> _dummyPokemon = [
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
-  Pokemon(
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
@@ -209,7 +201,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -230,9 +221,8 @@ final List<Pokemon> _dummyPokemon = [
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
-  Pokemon(
+  PokemonDetail(
     id: 1,
     name: 'Bulbasaur',
     types: ['Grass', 'Poison'],
@@ -252,7 +242,6 @@ final List<Pokemon> _dummyPokemon = [
     },
     genderRatioMale: 0.875,
     eggGroups: ['Monster', 'Grass'],
-    eggCycle: 'Grass',
     evolutionChain: [
       EvolutionStage(
         id: 1,
@@ -273,7 +262,6 @@ final List<Pokemon> _dummyPokemon = [
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
       ),
     ],
-    mainColor: Colors.green,
   ),
 
   // Add more dummy Pokémon here...

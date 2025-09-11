@@ -4,7 +4,7 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
 
 class PokemonCard extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonSummary pokemon;
   final VoidCallback? onTap;
 
   const PokemonCard({super.key, required this.pokemon, this.onTap});
@@ -80,50 +80,48 @@ class PokemonCard extends StatelessWidget {
                     ),
 
                     // Left side: info
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    pokemon.name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  '#${pokemon.id.toString().padLeft(3, '0')}',
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  pokemon.name,
                                   style: const TextStyle(
-                                    color: Colors.black26,
-                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var t in pokemon.types)
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      right: 6.0,
-                                      bottom: 6,
-                                    ),
-                                    child: TypeChip(type: t),
+                              ),
+                              Text(
+                                '#${pokemon.id.toString().padLeft(3, '0')}',
+                                style: const TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (var t in pokemon.types)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 6.0,
+                                    bottom: 6,
                                   ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  child: TypeChip(type: t),
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],

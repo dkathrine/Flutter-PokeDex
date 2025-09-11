@@ -1,21 +1,67 @@
 // lib/screens/detail_screen/detail_screen.dart
 import 'package:flutter/material.dart';
+import 'package:pokedex/data/pokemon_repository.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'about_tab.dart';
 import 'base_stats_tab.dart';
 import 'evolution_tab.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
 
-class DetailScreen extends StatelessWidget {
-  final Pokemon pokemon;
+class DetailScreen extends StatefulWidget {
+  final PokemonSummary pokemon;
   const DetailScreen({super.key, required this.pokemon});
 
   static const double _topHeight = 340;
 
   @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final PokemonRepository _repo = PokemonRepository();
+  PokemonDetail? _detail;
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDetail();
+  }
+
+  Future<void> _fetchDetail() async {
+    try {
+      final detail = await _repo.getPokemonDetail(widget.pokemon.id.toString());
+      setState(() {
+        _detail = detail;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final statusBar = media.padding.top;
+
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_error != null) {
+      return Scaffold(
+        body: Center(child: Text("Error loading Pokémon: $_error")),
+      );
+    }
+
+    final pokemon = _detail!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F6F9),
@@ -24,7 +70,7 @@ class DetailScreen extends StatelessWidget {
           children: [
             // Top header
             Container(
-              height: _topHeight + 100,
+              height: DetailScreen._topHeight + 100,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF2DD4BF), Color(0xFF34D399)],
@@ -71,7 +117,7 @@ class DetailScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          pokemon.name,
+                          widget.pokemon.name,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 40,
@@ -80,7 +126,7 @@ class DetailScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Row(
-                          children: pokemon.types
+                          children: widget.pokemon.types
                               .map(
                                 (t) => Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
@@ -93,7 +139,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '#${pokemon.id.toString().padLeft(3, '0')}',
+                    '#${widget.pokemon.id.toString().padLeft(3, '0')}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -106,7 +152,7 @@ class DetailScreen extends StatelessWidget {
 
             // Tabs & Bottom card
             Positioned(
-              top: _topHeight,
+              top: DetailScreen._topHeight,
               left: 0,
               right: 0,
               bottom: 0,
@@ -158,12 +204,12 @@ class DetailScreen extends StatelessWidget {
 
             // Pokemon artwork
             Positioned(
-              top: _topHeight - 140,
+              top: DetailScreen._topHeight - 140,
               left: 0,
               right: 0,
               child: Center(
                 child: Image.network(
-                  pokemon.imageUrl,
+                  widget.pokemon.imageUrl,
                   width: 180,
                   height: 180,
                   fit: BoxFit.contain,
