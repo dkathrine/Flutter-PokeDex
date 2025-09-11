@@ -1,4 +1,3 @@
-// lib/screens/detail_screen/about_tab.dart
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 

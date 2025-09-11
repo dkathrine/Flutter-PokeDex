@@ -1,4 +1,3 @@
-// lib/widgets/pokemon_card.dart
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';

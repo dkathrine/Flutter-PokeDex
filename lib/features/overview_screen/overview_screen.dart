@@ -1,4 +1,3 @@
-// lib/screens/overview_screen.dart
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/data/pokemon_repository.dart';
@@ -15,10 +14,10 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final PokemonRepository _repo = PokemonRepository();
+
+  late Future<List<PokemonSummary>> _futurePokemon;
   List<PokemonSummary> _items = [];
   late List<PokemonSummary> filtered = [];
-  bool _loading = false;
-  String? _error;
   final TextEditingController _txtctrl = TextEditingController();
   String? _selectedType;
   final FocusNode _searchFocusNode = FocusNode();
@@ -26,33 +25,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
   @override
   void initState() {
     super.initState();
-    _loadPage();
+    _futurePokemon = _repo.fetchPage();
     _txtctrl.addListener(_onSearchOrFilterChanged);
-  }
-
-  Future<void> _loadPage() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-    try {
-      final page = await _repo.fetchPage();
-      setState(() {
-        _items = page;
-        filtered = _items;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to load Pokemon: $_error")),
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
   }
 
   @override
@@ -164,33 +138,60 @@ class _OverviewScreenState extends State<OverviewScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: filtered.isEmpty
-                      ? const Center(child: Text('No Pokémon found'))
-                      : GridView.builder(
-                          padding: const EdgeInsets.only(top: 6, bottom: 18),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                childAspectRatio: 1.40,
+                  child: FutureBuilder(
+                    future: _futurePokemon,
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (asyncSnapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            'Failed to load Pokémon: ${asyncSnapshot.error}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        );
+                      } else if (!asyncSnapshot.hasData ||
+                          asyncSnapshot.data!.isEmpty) {
+                        return const Center(child: Text('No Pokémon found'));
+                      }
+
+                      // Once data is ready, cache it and apply filters
+                      _items = asyncSnapshot.data!;
+                      filtered = filtered.isEmpty ? _items : filtered;
+
+                      return filtered.isEmpty
+                          ? const Center(child: Text('No Pokémon found'))
+                          : GridView.builder(
+                              padding: const EdgeInsets.only(
+                                top: 6,
+                                bottom: 18,
                               ),
-                          itemCount: filtered.length,
-                          itemBuilder: (context, index) {
-                            final pokemon = filtered[index];
-                            return PokemonCard(
-                              pokemon: pokemon,
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        DetailScreen(pokemon: pokemon),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    childAspectRatio: 1.40,
                                   ),
+                              itemCount: filtered.length,
+                              itemBuilder: (context, index) {
+                                final pokemon = filtered[index];
+                                return PokemonCard(
+                                  pokemon: pokemon,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            DetailScreen(pokemon: pokemon),
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             );
-                          },
-                        ),
+                    },
+                  ),
                 ),
               ),
             ],
