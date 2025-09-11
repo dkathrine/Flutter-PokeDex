@@ -53,5 +53,6 @@ class TypeAssets {
   /// Get gradient colors for a type; fallback to grey if unknown
   static List<Color> gradientForType(String type) {
     return gradients[type.toLowerCase()] ?? [Colors.grey, Colors.grey.shade300];
+    //Color(0xFFA340FF), Color(0xFF570E9B)
   }
 }

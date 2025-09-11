@@ -11,9 +11,6 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = const Color.fromARGB(255, 163, 64, 255);
-    final darker = const Color.fromARGB(255, 87, 14, 155);
-
     final gradientColor = TypeAssets.gradientForType(this.pokemon.types.first);
 
     return GestureDetector(
@@ -37,7 +34,7 @@ class PokemonCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: base.withAlpha(18),
+                  color: Colors.black.withAlpha(18),
                   blurRadius: 8,
                   offset: const Offset(0, 6),
                 ),
