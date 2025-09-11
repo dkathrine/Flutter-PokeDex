@@ -23,20 +23,30 @@ class PokemonRepository {
   }) async {
     final listJson = await api.fetchPokemonList(offset: offset, limit: limit);
     final results = (listJson["results"] as List).cast<Map<String, dynamic>>();
-    const int concurrency = 10;
+
+    if (results.isEmpty) {
+      //print("⚠️ API returned empty list at offset: $offset");
+      return [];
+    }
+
+    const int concurrency = 5;
     final List<PokemonSummary> out = [];
 
     for (var i = 0; i < results.length; i += concurrency) {
       final batch = results.skip(i).take(concurrency).toList();
       final batchFutures = batch.map((r) async {
         final name = r["name"] as String;
-        final detail = await _fetchOrGetFromCache(name);
-        final summary = _mapDetailToSummary(detail);
-        return summary;
+        try {
+          final detail = await _fetchOrGetFromCache(name);
+          final summary = _mapDetailToSummary(detail);
+          return summary;
+        } catch (e) {
+          //print("Failted to fetch $name: $e");
+        }
       }).toList();
 
       final batchResults = await Future.wait(batchFutures);
-      out.addAll(batchResults);
+      out.addAll(batchResults.whereType<PokemonSummary>());
       await Future.delayed(Duration(milliseconds: 200));
     }
     return out;
@@ -82,7 +92,19 @@ class PokemonRepository {
 
     //fetch from API
     final raw = await api.fetchPokemonRaw(nameOrId);
-    final species = await api.fetchSpeciesRaw(nameOrId);
+
+    int extractSpeciesIdFromUrl(String url) {
+      final cleanedUrl = url.endsWith('/')
+          ? url.substring(0, url.length - 1)
+          : url;
+
+      final parts = cleanedUrl.split('/');
+      return int.tryParse(parts.last) ?? 0;
+    }
+
+    final speciesId = extractSpeciesIdFromUrl(raw["species"]["url"]);
+
+    final species = await api.fetchSpeciesRaw(speciesId.toString());
 
     final evoChainUrl = species["evolution_chain"]?["url"] as String?;
     final evoJson = evoChainUrl != null
