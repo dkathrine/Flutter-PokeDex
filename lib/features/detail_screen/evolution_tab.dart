@@ -1,4 +1,3 @@
-// lib/screens/detail_screen/evolution_tab.dart
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/evolution_tile.dart';
