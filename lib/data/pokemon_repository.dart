@@ -1,10 +1,21 @@
 import 'dart:async';
+import 'package:hive/hive.dart';
 import 'package:pokedex/data/poke_api_client.dart';
 import 'package:pokedex/models/pokemon.dart';
 
 class PokemonRepository {
   final api = PokeApiClient();
   final Map<int, PokemonDetail> _cache = {};
+
+  static const String _boxName = "pokemon_cache";
+
+  PokemonRepository() {
+    if (!Hive.isBoxOpen(_boxName)) {
+      throw Exception(
+        "Hive box $_boxName not open. INitialize Hive before using repository.",
+      );
+    }
+  }
 
   Future<List<PokemonSummary>> fetchPage({
     int offset = 0,
@@ -26,6 +37,7 @@ class PokemonRepository {
 
       final batchResults = await Future.wait(batchFutures);
       out.addAll(batchResults);
+      await Future.delayed(Duration(milliseconds: 200));
     }
     return out;
   }
@@ -35,18 +47,40 @@ class PokemonRepository {
   }
 
   Future<PokemonDetail> _fetchOrGetFromCache(String nameOrId) async {
+    final box = Hive.box<PokemonDetail>(_boxName);
+    //print('Cached ids: ${box.keys.toList()}');
     final maybeId = int.tryParse(nameOrId);
 
+    //check in-memory storage by Id
     if (maybeId != null && _cache.containsKey(maybeId)) {
       return _cache[maybeId]!;
     }
 
+    //check in-memory storage by name
     for (final p in _cache.values) {
       if (p.name.toLowerCase() == nameOrId.toLowerCase()) {
         return p;
       }
     }
 
+    //check hive cache by Id
+    if (maybeId != null && box.containsKey(maybeId)) {
+      final cachedPokemon = box.get(maybeId);
+      if (cachedPokemon != null) {
+        _cache[maybeId] = cachedPokemon;
+        return cachedPokemon;
+      }
+    }
+
+    //check hive cache by name
+    for (final p in box.values) {
+      if (p.name.toLowerCase() == nameOrId.toLowerCase()) {
+        _cache[p.id] = p;
+        return p;
+      }
+    }
+
+    //fetch from API
     final raw = await api.fetchPokemonRaw(nameOrId);
     final species = await api.fetchSpeciesRaw(nameOrId);
 
@@ -57,6 +91,8 @@ class PokemonRepository {
 
     final detail = await _maptoDetail(raw, species, evoJson);
     _cache[detail.id] = detail;
+    await box.put(detail.id, detail);
+
     return detail;
   }
 

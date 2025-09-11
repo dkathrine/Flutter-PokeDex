@@ -61,6 +61,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         });
       }
     } catch (e) {
+      print("Error loading more Pokemon: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to load more Pokémon: $e")),
       );
@@ -205,7 +206,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       return filtered.isEmpty
                           ? const Center(child: Text('No Pokémon found'))
                           : GridView.builder(
-                              //controller: _scrollController,
+                              controller: _scrollController,
                               padding: const EdgeInsets.only(
                                 top: 6,
                                 bottom: 18,

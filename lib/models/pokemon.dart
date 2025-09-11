@@ -1,15 +1,61 @@
-class PokemonDetail {
+import 'package:hive/hive.dart';
+
+part 'pokemon.g.dart';
+
+@HiveType(typeId: 0)
+class EvolutionStage {
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
-  final List<String> types;
+
+  @HiveField(2)
   final String imageUrl;
+
+  const EvolutionStage({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+  });
+}
+
+@HiveType(typeId: 1)
+class PokemonDetail {
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
+  final String name;
+
+  @HiveField(2)
+  final List<String> types;
+
+  @HiveField(3)
+  final String imageUrl;
+
+  @HiveField(4)
   final String species;
+
+  @HiveField(5)
   final String height;
+
+  @HiveField(6)
   final String weight;
+
+  @HiveField(7)
   final List<String> abilities;
+
+  @HiveField(8)
   final Map<String, int> baseStats;
+
+  @HiveField(9)
   final double? genderRatioMale;
+
+  @HiveField(10)
   final List<String> eggGroups;
+
+  @HiveField(11)
   final List<EvolutionStage> evolutionChain;
 
   const PokemonDetail({
@@ -25,18 +71,6 @@ class PokemonDetail {
     required this.genderRatioMale,
     required this.eggGroups,
     required this.evolutionChain,
-  });
-}
-
-class EvolutionStage {
-  final int id;
-  final String name;
-  final String imageUrl;
-
-  const EvolutionStage({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
   });
 }
 
