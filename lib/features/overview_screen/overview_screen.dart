@@ -61,7 +61,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
         });
       }
     } catch (e) {
-      print("Error loading more Pokemon: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to load more Pokémon: $e")),
       );
