@@ -14,19 +14,25 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final PokemonRepository _repo = PokemonRepository();
-
   late Future<List<PokemonSummary>> _futurePokemon;
   List<PokemonSummary> _items = [];
   late List<PokemonSummary> filtered = [];
   final TextEditingController _txtctrl = TextEditingController();
-  String? _selectedType;
   final FocusNode _searchFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+
+  String? _selectedType;
+  bool _loadingMore = false;
+  int _offset = 20;
+  final int _limit = 20;
+  bool _hasMore = true;
 
   @override
   void initState() {
     super.initState();
     _futurePokemon = _repo.fetchPage();
     _txtctrl.addListener(_onSearchOrFilterChanged);
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -35,6 +41,42 @@ class _OverviewScreenState extends State<OverviewScreen> {
     _txtctrl.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadMore() async {
+    if (_loadingMore || !_hasMore) return;
+
+    setState(() => _loadingMore = true);
+
+    try {
+      final page = await _repo.fetchPage(offset: _offset, limit: _limit);
+
+      if (page.isEmpty) {
+        setState(() => _hasMore = false);
+      } else {
+        setState(() {
+          _offset += _limit;
+          _items.addAll(page);
+          filtered = List.from(_items);
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load more Pokémon: $e")),
+      );
+    } finally {
+      setState(() => _loadingMore = false);
+    }
+  }
+
+  void _onScroll() {
+    final isFiltering = _txtctrl.text.isNotEmpty || _selectedType != null;
+    if (isFiltering) return;
+
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 50) {
+      _loadMore();
+    }
   }
 
   void _onSearchOrFilterChanged() {
@@ -163,6 +205,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       return filtered.isEmpty
                           ? const Center(child: Text('No Pokémon found'))
                           : GridView.builder(
+                              //controller: _scrollController,
                               padding: const EdgeInsets.only(
                                 top: 6,
                                 bottom: 18,
