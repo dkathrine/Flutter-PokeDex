@@ -13,15 +13,23 @@ class PokemonRepository {
   }) async {
     final listJson = await api.fetchPokemonList(offset: offset, limit: limit);
     final results = (listJson["results"] as List).cast<Map<String, dynamic>>();
+    const int concurrency = 10;
+    final List<PokemonSummary> out = [];
 
-    final futures = results.map((r) async {
-      final name = r["name"] as String;
-      final raw = await api.fetchPokemonRaw(name);
-      final summary = _mapRawToSummary(raw);
-      _summaryCache[summary.id] = summary;
-      return summary;
-    });
-    return await Future.wait(futures);
+    for (var i = 0; i < results.length; i += concurrency) {
+      final batch = results.skip(i).take(concurrency).toList();
+      final batchFutures = batch.map((r) async {
+        final name = r["name"] as String;
+        final raw = await api.fetchPokemonRaw(name);
+        final summary = _mapRawToSummary(raw);
+        _summaryCache[summary.id] = summary;
+        return summary;
+      }).toList();
+
+      final batchResults = await Future.wait(batchFutures);
+      out.addAll(batchResults);
+    }
+    return out;
   }
 
   Future<PokemonDetail> getPokemonDetail(String nameOrId) async {
