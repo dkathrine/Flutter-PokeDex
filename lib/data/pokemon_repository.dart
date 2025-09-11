@@ -4,8 +4,7 @@ import 'package:pokedex/models/pokemon.dart';
 
 class PokemonRepository {
   final api = PokeApiClient();
-  final Map<int, PokemonDetail> _detailCache = {};
-  final Map<int, PokemonSummary> _summaryCache = {};
+  final Map<int, PokemonDetail> _cache = {};
 
   Future<List<PokemonSummary>> fetchPage({
     int offset = 0,
@@ -20,9 +19,8 @@ class PokemonRepository {
       final batch = results.skip(i).take(concurrency).toList();
       final batchFutures = batch.map((r) async {
         final name = r["name"] as String;
-        final raw = await api.fetchPokemonRaw(name);
-        final summary = _mapRawToSummary(raw);
-        _summaryCache[summary.id] = summary;
+        final detail = await _fetchOrGetFromCache(name);
+        final summary = _mapDetailToSummary(detail);
         return summary;
       }).toList();
 
@@ -33,9 +31,20 @@ class PokemonRepository {
   }
 
   Future<PokemonDetail> getPokemonDetail(String nameOrId) async {
+    return _fetchOrGetFromCache(nameOrId);
+  }
+
+  Future<PokemonDetail> _fetchOrGetFromCache(String nameOrId) async {
     final maybeId = int.tryParse(nameOrId);
-    if (maybeId != null && _detailCache.containsKey(maybeId)) {
-      return _detailCache[maybeId]!;
+
+    if (maybeId != null && _cache.containsKey(maybeId)) {
+      return _cache[maybeId]!;
+    }
+
+    for (final p in _cache.values) {
+      if (p.name.toLowerCase() == nameOrId.toLowerCase()) {
+        return p;
+      }
     }
 
     final raw = await api.fetchPokemonRaw(nameOrId);
@@ -47,15 +56,15 @@ class PokemonRepository {
         : null;
 
     final detail = await _maptoDetail(raw, species, evoJson);
-    _detailCache[detail.id] = detail;
+    _cache[detail.id] = detail;
     return detail;
   }
 
-  PokemonSummary _mapRawToSummary(Map<String, dynamic> raw) {
-    final id = raw["id"] as int;
-    final name = raw["name"] as String;
-    final types = mapTypes(raw["types"]);
-    final imageUrl = officialArtwork(raw);
+  PokemonSummary _mapDetailToSummary(PokemonDetail detail) {
+    final id = detail.id;
+    final name = detail.name;
+    final types = detail.types;
+    final imageUrl = detail.imageUrl;
     return PokemonSummary(
       id: id,
       name: capitalizeWords(name),
