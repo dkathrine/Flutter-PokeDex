@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 
 class AboutTab extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonDetail pokemon;
   const AboutTab({super.key, required this.pokemon});
 
   Widget _sectionTitle(String text) => Padding(
@@ -26,7 +26,7 @@ class AboutTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final femaleRatio = 1.0 - pokemon.genderRatioMale;
+    final femaleRatio = 1.0 - pokemon.genderRatioMale!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,7 +50,7 @@ class AboutTab extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: (pokemon.genderRatioMale * 1000).round(),
+                      flex: (pokemon.genderRatioMale! * 1000).round(),
                       child: Container(
                         height: 16,
                         decoration: BoxDecoration(
@@ -77,7 +77,7 @@ class AboutTab extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '${(pokemon.genderRatioMale * 100).toStringAsFixed(1)}% ♂',
+                      '${(pokemon.genderRatioMale! * 100).toStringAsFixed(1)}% ♂',
                     ),
                     const SizedBox(width: 8),
                     Text('${(femaleRatio * 100).toStringAsFixed(1)}% ♀'),
@@ -88,7 +88,7 @@ class AboutTab extends StatelessWidget {
           ),
         ),
         _row('Egg Groups', pokemon.eggGroups.join(', ')),
-        _row('Egg Cycle', pokemon.eggCycle),
+        //_row('Egg Cycle', pokemon.eggCycle),
         const SizedBox(height: 24),
       ],
     );

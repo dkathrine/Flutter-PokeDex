@@ -4,7 +4,7 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/evolution_tile.dart';
 
 class EvolutionTab extends StatelessWidget {
-  final Pokemon pokemon;
+  final PokemonDetail pokemon;
   const EvolutionTab({super.key, required this.pokemon});
 
   @override

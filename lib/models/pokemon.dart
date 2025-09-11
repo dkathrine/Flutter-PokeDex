@@ -115,3 +115,21 @@ int? extractIdFromUrl(String? url) {
 
 String artworkUrlForId(int id) =>
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png";
+
+String capitalizeFirstLetter(String? word) {
+  if (word == null || word.isEmpty) return "";
+  return word[0].toUpperCase() + word.substring(1);
+}
+
+String capitalizeWords(String? text) {
+  if (text == null || text.isEmpty) return "";
+  return text
+      .split(" ")
+      .map((word) {
+        return word
+            .split("-")
+            .map((part) => capitalizeFirstLetter(part))
+            .join("-");
+      })
+      .join(" ");
+}

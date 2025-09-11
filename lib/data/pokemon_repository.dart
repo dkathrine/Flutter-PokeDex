@@ -48,7 +48,12 @@ class PokemonRepository {
     final name = raw["name"] as String;
     final types = mapTypes(raw["types"]);
     final imageUrl = officialArtwork(raw);
-    return PokemonSummary(id: id, name: name, types: types, imageUrl: imageUrl);
+    return PokemonSummary(
+      id: id,
+      name: capitalizeWords(name),
+      types: types.map((t) => capitalizeFirstLetter(t)).toList(),
+      imageUrl: imageUrl,
+    );
   }
 
   Future<PokemonDetail> _maptoDetail(
@@ -83,7 +88,7 @@ class PokemonRepository {
     if (evoJson != null) {
       void traverse(node) {
         final sp = node["species"] as Map<String, dynamic>;
-        final spName = sp["name"] as String;
+        final spName = capitalizeWords(sp["name"] as String);
         final spUrl = sp["url"] as String?;
         final spId = extractIdFromUrl(spUrl) ?? 0;
         evoStages.add(
@@ -105,16 +110,18 @@ class PokemonRepository {
 
     return PokemonDetail(
       id: id,
-      name: name,
-      types: types,
+      name: capitalizeWords(name),
+      types: types.map((t) => capitalizeFirstLetter(t)).toList(),
       imageUrl: imageUrl,
-      species: speciesText,
+      species: capitalizeWords(speciesText),
       height: height.toString(),
       weight: weight.toString(),
-      abilities: abilities,
-      baseStats: stats,
+      abilities: abilities.map((a) => capitalizeWords(a)).toList(),
+      baseStats: stats.map(
+        (key, value) => MapEntry(capitalizeWords(key), value),
+      ),
       genderRatioMale: maleRatio,
-      eggGroups: eggGroups,
+      eggGroups: eggGroups.map((e) => capitalizeWords(e)).toList(),
       evolutionChain: evoStages,
     );
   }
