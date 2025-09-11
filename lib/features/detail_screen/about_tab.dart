@@ -25,7 +25,9 @@ class AboutTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final femaleRatio = 1.0 - pokemon.genderRatioMale!;
+    final maleRatio = pokemon.genderRatioMale;
+    final femaleRatio = maleRatio != null ? 1.0 - maleRatio : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -46,42 +48,44 @@ class AboutTab extends StatelessWidget {
                 child: Text('Gender', style: TextStyle(color: Colors.black54)),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: (pokemon.genderRatioMale! * 1000).round(),
-                      child: Container(
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withAlpha(90),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8),
+                child: maleRatio != null
+                    ? Row(
+                        children: [
+                          Expanded(
+                            flex: (maleRatio * 1000).round(),
+                            child: Container(
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withAlpha(90),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: (femaleRatio * 1000).round(),
-                      child: Container(
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: Colors.pink.withAlpha(85),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8),
+                          Expanded(
+                            flex: (femaleRatio! * 1000).round(),
+                            child: Container(
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: Colors.pink.withAlpha(85),
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(8),
+                                  bottomRight: Radius.circular(8),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      '${(pokemon.genderRatioMale! * 100).toStringAsFixed(1)}% ♂',
-                    ),
-                    const SizedBox(width: 8),
-                    Text('${(femaleRatio * 100).toStringAsFixed(1)}% ♀'),
-                  ],
-                ),
+                          const SizedBox(width: 12),
+                          Text(
+                            '${(pokemon.genderRatioMale! * 100).toStringAsFixed(1)}% ♂',
+                          ),
+                          const SizedBox(width: 8),
+                          Text('${(femaleRatio * 100).toStringAsFixed(1)}% ♀'),
+                        ],
+                      )
+                    : Text('Genderless'),
               ),
             ],
           ),
