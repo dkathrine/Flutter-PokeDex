@@ -36,6 +36,13 @@ class PokemonRepository {
       final batch = results.skip(i).take(concurrency).toList();
       final batchFutures = batch.map((r) async {
         final name = r["name"] as String;
+        final url = r["url"] as String;
+        final idFromUrl = extractIdFromUrl(url);
+
+        if (idFromUrl != null && idFromUrl >= 10000) {
+          return null;
+        }
+
         try {
           final detail = await _fetchOrGetFromCache(name);
           final summary = _mapDetailToSummary(detail);
