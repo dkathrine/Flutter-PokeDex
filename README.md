@@ -112,3 +112,4 @@ Once Pokémon are loaded:
 ## Future Improvements
 - Implement Pokémon Variations in Evolution Tab
 - Implement Moves Tab to display when Pokémon learn moves
+- (Might also add fetch on Search at some point)
