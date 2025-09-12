@@ -122,7 +122,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Text(
-                  'Pokedex',
+                  'Pokédex',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
               ),
