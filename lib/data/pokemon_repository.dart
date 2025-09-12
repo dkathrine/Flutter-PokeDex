@@ -118,6 +118,12 @@ class PokemonRepository {
     return detail;
   }
 
+  Future<void> clearCache() async {
+    _cache.clear();
+    final box = Hive.box<PokemonDetail>(_boxName);
+    await box.clear();
+  }
+
   PokemonSummary _mapDetailToSummary(PokemonDetail detail) {
     final id = detail.id;
     final name = detail.name;
