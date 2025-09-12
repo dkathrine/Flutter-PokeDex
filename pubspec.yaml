@@ -19,6 +19,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   build_runner: ^2.4.0
   hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -41,3 +42,18 @@ flutter:
     - assets/types/rock.png
     - assets/types/steel.png
     - assets/types/water.png
+    - assets/icon/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/icon.png
+
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icon/icon.png"
+
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#ffffff"
+    theme_color: "#ffffff"
