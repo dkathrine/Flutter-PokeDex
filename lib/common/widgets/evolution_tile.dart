@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
+import 'package:pokedex/common/utils/name_utils.dart';
 
 class EvolutionTile extends StatelessWidget {
   final EvolutionStage stage;
@@ -25,7 +26,7 @@ class EvolutionTile extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              stage.name,
+              capitalizeWords(stage.name),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),

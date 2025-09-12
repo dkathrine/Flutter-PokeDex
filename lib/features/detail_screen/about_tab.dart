@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
+import 'package:pokedex/common/utils/name_utils.dart';
 
 class AboutTab extends StatelessWidget {
   final PokemonDetail pokemon;
@@ -18,7 +19,7 @@ class AboutTab extends StatelessWidget {
           width: 120,
           child: Text(label, style: const TextStyle(color: Colors.black54)),
         ),
-        Expanded(child: Text(value)),
+        Expanded(child: Text(capitalizeWords(value))),
       ],
     ),
   );

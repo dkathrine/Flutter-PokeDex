@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
 import 'package:pokedex/common/utils/type_assets.dart';
+import 'package:pokedex/common/utils/name_utils.dart';
 
 class PokemonCard extends StatelessWidget {
   final PokemonSummary pokemon;
@@ -89,7 +90,9 @@ class PokemonCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  pokemon.name,
+                                  capitalizeWords(
+                                    cleanPokemonName(pokemon.name),
+                                  ),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -117,7 +120,9 @@ class PokemonCard extends StatelessWidget {
                                     right: 6.0,
                                     bottom: 6,
                                   ),
-                                  child: TypeChip(type: t),
+                                  child: TypeChip(
+                                    type: capitalizeFirstLetter(t),
+                                  ),
                                 ),
                             ],
                           ),

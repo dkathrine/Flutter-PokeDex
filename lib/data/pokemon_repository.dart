@@ -12,7 +12,7 @@ class PokemonRepository {
   PokemonRepository() {
     if (!Hive.isBoxOpen(_boxName)) {
       throw Exception(
-        "Hive box $_boxName not open. INitialize Hive before using repository.",
+        "Hive box $_boxName not open. Initialize Hive before using repository.",
       );
     }
   }
@@ -125,23 +125,18 @@ class PokemonRepository {
     return detail;
   }
 
-  Future<void> clearCache() async {
+  /*   Future<void> clearCache() async {
     _cache.clear();
     final box = Hive.box<PokemonDetail>(_boxName);
     await box.clear();
-  }
+  } */
 
   PokemonSummary _mapDetailToSummary(PokemonDetail detail) {
     final id = detail.id;
     final name = detail.name;
     final types = detail.types;
     final imageUrl = detail.imageUrl;
-    return PokemonSummary(
-      id: id,
-      name: capitalizeWords(name),
-      types: types.map((t) => capitalizeFirstLetter(t)).toList(),
-      imageUrl: imageUrl,
-    );
+    return PokemonSummary(id: id, name: name, types: types, imageUrl: imageUrl);
   }
 
   Future<PokemonDetail> _maptoDetail(
@@ -176,7 +171,7 @@ class PokemonRepository {
     if (evoJson != null) {
       void traverse(node) {
         final sp = node["species"] as Map<String, dynamic>;
-        final spName = capitalizeWords(sp["name"] as String);
+        final spName = sp["name"] as String;
         final spUrl = sp["url"] as String?;
         final spId = extractIdFromUrl(spUrl) ?? 0;
         evoStages.add(
@@ -198,18 +193,16 @@ class PokemonRepository {
 
     return PokemonDetail(
       id: id,
-      name: capitalizeWords(name),
-      types: types.map((t) => capitalizeFirstLetter(t)).toList(),
+      name: name,
+      types: types,
       imageUrl: imageUrl,
-      species: capitalizeWords(speciesText),
+      species: speciesText,
       height: height.toString(),
       weight: weight.toString(),
-      abilities: abilities.map((a) => capitalizeWords(a)).toList(),
-      baseStats: stats.map(
-        (key, value) => MapEntry(capitalizeWords(key), value),
-      ),
+      abilities: abilities,
+      baseStats: stats.map((key, value) => MapEntry(key, value)),
       genderRatioMale: maleRatio,
-      eggGroups: eggGroups.map((e) => capitalizeWords(e)).toList(),
+      eggGroups: eggGroups,
       evolutionChain: evoStages,
     );
   }
