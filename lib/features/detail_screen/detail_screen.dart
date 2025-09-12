@@ -6,6 +6,7 @@ import 'package:pokedex/features/detail_screen/base_stats_tab.dart';
 import 'package:pokedex/features/detail_screen/evolution_tab.dart';
 import 'package:pokedex/common/widgets/type_chip.dart';
 import 'package:pokedex/common/utils/type_assets.dart';
+import 'package:pokedex/common/utils/name_utils.dart';
 
 class DetailScreen extends StatefulWidget {
   final PokemonSummary pokemon;
@@ -106,7 +107,9 @@ class _DetailScreenState extends State<DetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.pokemon.name,
+                              capitalizeWords(
+                                cleanPokemonName(widget.pokemon.name),
+                              ),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
@@ -121,7 +124,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                       padding: const EdgeInsets.only(
                                         right: 8.0,
                                       ),
-                                      child: TypeChip(type: t),
+                                      child: TypeChip(
+                                        type: capitalizeFirstLetter(t),
+                                      ),
                                     ),
                                   )
                                   .toList(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
+import 'package:pokedex/common/utils/name_utils.dart';
 
 class BaseStatsTab extends StatelessWidget {
   final PokemonDetail pokemon;
@@ -13,7 +14,7 @@ class BaseStatsTab extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          SizedBox(width: 90, child: Text(label)),
+          SizedBox(width: 90, child: Text(capitalizeFirstLetter(label))),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
