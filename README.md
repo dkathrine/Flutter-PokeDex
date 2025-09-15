@@ -43,29 +43,29 @@ The app uses **two-level** caching to reduce API calls and improve speed:
 
 1. In-memory cache
 
-- Stores Pokémon fetched during the current session.
+  - Stores Pokémon fetched during the current session.
 
-- Fastest way to retrieve data.
+  - Fastest way to retrieve data.
 
 2. Hive persistent cache
 
-- Stores Pokémon locally on the device.
+  - Stores Pokémon locally on the device.
 
-- Survives app restarts.
+  - Survives app restarts.
 
-- Reduces redundant network calls.
+  - Reduces redundant network calls.
 
-- Great for offline browsing.
+  - Great for offline browsing.
 
 ### Example Flow:
 
 When a Pokémon is needed:
 
-- Check in-memory cache.
+  - Check in-memory cache.
 
-- If not found → check Hive local database.
+  - If not found → check Hive local database.
 
-- If still not found → fetch from PokéAPI and save it to both caches.
+  - If still not found → fetch from PokéAPI and save it to both caches.
 ## Run Locally
 
 1. Clone the project
